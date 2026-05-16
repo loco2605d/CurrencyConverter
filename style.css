@@ -1,0 +1,259 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif; /* Clean, modern geometric font */
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px; /* Added padding to prevent container from touching screen edges on mobile */
+    background: #0f172a; /* Deep slate background to make glass pop */
+    overflow-x: hidden; /* Changed from overflow: hidden to allow vertical scrolling on small devices if needed */
+    position: relative;
+}
+
+/* ==========================================================================
+   2. BACKGROUND BLUR SHAPES (Creates the underlying color to blur)
+   ========================================================================== */
+body::before,
+body::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(10px);
+    z-index: -1;
+}
+
+/* Top-right vibrant orb */
+body::before {
+    width: clamp(200px, 30vw, 300px); /* Responsive sizing for background shapes */
+    height: clamp(200px, 30vw, 300px);
+    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    top: 15%;
+    right: 20%;
+    animation: float 8s ease-in-out infinite alternate;
+}
+
+/* Bottom-left vibrant orb */
+body::after {
+    width: clamp(220px, 35vw, 350px);
+    height: clamp(220px, 35vw, 350px);
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    bottom: 10%;
+    left: 20%;
+    animation: float 8s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes float {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-30px) scale(1.05); }
+}
+
+/* ==========================================================================
+   3. MAIN GLASS CONTAINER
+   ========================================================================== */
+.container {
+    width: 100%;
+    max-width: 420px;
+    padding: clamp(20px, 5vw, 30px); /* Padding scales nicely on smaller screens */
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.07); /* Semi-transparent white */
+    backdrop-filter: blur(20px); /* The magical frosted glass effect */
+    -webkit-backdrop-filter: blur(20px); /* Safari support */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Highlights the glass edge */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    color: #ffffff;
+}
+
+.container h2 {
+    text-align: center;
+    font-size: clamp(1.3rem, 4vw, 1.6rem); /* Smooth scaling text */
+    font-weight: 600;
+    margin-bottom: 25px;
+    letter-spacing: 0.5px;
+    background: linear-gradient(to right, #ffffff, #e2e8f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================================================
+   4. FORM ELEMENTS & INPUTS
+   ========================================================================== */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.amount p {
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.amount input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.amount input:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+}
+
+/* ==========================================================================
+   5. DROPDOWNS & LAYOUT
+   ========================================================================== */
+.dropdown {
+    display: flex;
+    align-items: flex-end; /* Aligns From, Icon, and To to the bottom baseline */
+    justify-content: space-between;
+    gap: 12px;
+    margin: 5px 0;
+}
+
+.from, .to {
+    flex: 1;
+    min-width: 0; /* Prevents flex items from breaking layout boundaries */
+}
+
+.dropdown p {
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.select_container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Slightly tighter gap to handle narrow screens */
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.select_container:focus-within {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.select_container img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    border-radius: 4px;
+    flex-shrink: 0; /* Keeps flag image from getting squished */
+}
+
+.select_container select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-overflow: ellipsis; /* Gracefully truncates long text on tiny viewports */
+}
+
+/* Style options dropdown list */
+.select_container select option {
+    background: #1e293b;
+    color: #ffffff;
+}
+
+/* Swap Icon Styles */
+.dropdown i {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    margin-bottom: 12px; /* Replaced margin-top with a balanced bottom margin for cross-device alignment */
+    padding: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.dropdown i:hover {
+    color: #ffffff;
+    transform: rotate(180deg);
+}
+
+/* ==========================================================================
+   6. OUTPUT MESSAGE & BUTTON
+   ========================================================================== */
+.msg {
+    text-align: center;
+    font-size: clamp(0.95rem, 3vw, 1.05rem);
+    font-weight: 500;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    letter-spacing: 0.5px;
+    word-break: break-word; /* Prevents long numbers or strings from breaking glass container */
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #6366f1, #3b82f6);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+    filter: brightness(1.1);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* ==========================================================================
+   7. SMART RESPONSIVE WRAPPING (Mobile viewports below 360px width)
+   ========================================================================== */
+@media (max-width: 360px) {
+    .dropdown {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+    .from, .to {
+        width: 100%;
+    }
+    .dropdown i {
+        margin-bottom: 0;
+        transform: rotate(90deg); /* Flips the arrow direction vertically for layout harmony */
+    }
+    .dropdown i:hover {
+        transform: rotate(270deg);
+    }
+}
+
