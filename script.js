@@ -2,7 +2,7 @@ const BASE_URL = "https://open.er-api.com/v6/latest";
 const btn = document.querySelector("form button");
 const dropdowns = document.querySelectorAll(".dropdown select");
 const msg = document.querySelector(".msg");
-const inputt = document.querySelector(".input"); // Looks for class="input"
+const inputt = document.querySelector(".input");
 
 // 1. Populate Dropdowns
 for (let select of dropdowns) {
@@ -36,12 +36,13 @@ const updateFlag = (element) => {
 
 // 3. Core Function to Fetch and Update Exchange Rate
 const updateExchangeRate = async () => {
-    let amtVal = inputt.value; // Uses the 'inputt' variable directly
+    let amtVal = inputt.value; 
     
-    // If empty or negative/zero, default to 1
-    if (amtVal === "" || amtVal < 1) {
-        amtVal = 1;
-        inputt.value = "1";
+    // Fallback variable for the calculation so we don't trap the user's cursor
+    let calculationAmount = amtVal;
+
+    if (calculationAmount === "" || calculationAmount < 1) {
+        calculationAmount = 1;
     }
 
     const fromCurr = document.querySelector("select[name='from']").value;
@@ -54,8 +55,8 @@ const updateExchangeRate = async () => {
         let data = await response.json();
         let rate = data.rates[toCurr];
         
-        let finalAmount = (amtVal * rate).toFixed(2);
-        msg.innerText = `${amtVal} ${fromCurr} = ${finalAmount} ${toCurr}`;
+        let finalAmount = (calculationAmount * rate).toFixed(2);
+        msg.innerText = `${calculationAmount} ${fromCurr} = ${finalAmount} ${toCurr}`;
     } catch (error) {
         msg.innerText = "Something went wrong.";
         console.error(error);
@@ -68,9 +69,17 @@ btn.addEventListener("click", (evt) => {
     updateExchangeRate();
 });
 
-// Updates live as you type!
+// Updates live as you type without forcing "1" into the field mid-keystroke
 inputt.addEventListener("input", () => {
     updateExchangeRate();
+});
+
+// Resets the visible text box back to "1" only when the user clicks out of it empty
+inputt.addEventListener("blur", () => {
+    if (inputt.value === "" || inputt.value < 1) {
+        inputt.value = "1";
+        updateExchangeRate();
+    }
 });
 
 // Run once on page load to show initial conversion immediately
